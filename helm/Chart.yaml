@@ -1,0 +1,17 @@
+name: k8s-helm-poc
+version: 0.0.1
+description: Small POC of how helm ties in with K8s. Running on top of simple dockerized node app.
+keywords:
+  - POC
+  - Kubernetes
+  - K8s
+  - helm
+  - node.js
+home: https://github.com/ndrwtrsk/k8s-helm-poc
+sources:
+  - https://github.com/ndrwtrsk/k8s-helm-poc
+maintainers: # (optional)
+  - name: Andrew Torski
+    email: andrew.torski@gmail.com
+    url: https://github.com/ndrwtrsk
+appVersion: 0.0.1

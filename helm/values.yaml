@@ -1,0 +1,3 @@
+appVersion: '0.0.2'
+image:
+  repository: ndrw/k8s-helm-poc
