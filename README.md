@@ -71,8 +71,8 @@ helm upgrade k8s-helm-poc .
 This will create a new release as seen below.
 ```
 $ helm ls
-NAME        	REVISION	UPDATED                 	STATUS  	CHART             	NAMESPACE
-k8s-helm-poc	2       	Sun Jan 28 13:30:57 2018	DEPLOYED	k8s-helm-poc-0.0.1	default
+NAME          REVISION  UPDATED                   STATUS    CHART               NAMESPACE
+k8s-helm-poc  2         Sun Jan 28 13:30:57 2018  DEPLOYED  k8s-helm-poc-0.0.1  default
 ```
 Kubectl will confirm increase of replicas.
 ```
@@ -102,6 +102,31 @@ image:
 ```
 Right now we'll upgrade image and also use variable references in `deployment.yaml`.
 
+Substitute old deployment.yaml with:
+```
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: k8s-helm-poc
+spec:
+  selector:
+    matchLabels:
+      app: k8s-helm-poc
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: k8s-helm-poc
+    spec:
+      containers:
+        - name: k8s-helm-poc
+          image: {{ .Values.image.repository }}:{{ .Values.appVersion }}
+          ports:
+            - containerPort: 8888
+              protocol: TCP
+```
+Take notice of `image: {{ .Values.image.repository }}:{{ .Values.appVersion }}` this is how we'll reference values in `values.yaml`. 
+
 Issue:
 ```$ helm upgrade k8s-helm-poc .```
 
@@ -118,10 +143,14 @@ $ curl --silent $kip:31000/api/k8s | jq '.'
 
 Version has been upgraded and we also used value referencing.
 
-
+### To install on different namespace:
+`$ helm --namespace=development install --name k8s-helm-poc .`
+`$ helm --namespace=test install --name k8s-helm-poc .`
 
 ## Findings
-None yet
+
+Helm eases the process of deployment k8s apps, it's something that I was feeling was missing when I first encountered k8s.
+
 ## Knowledge, terms, notions
 
 ### Helm
@@ -162,7 +191,8 @@ spec:
 >From inside my k8s cluster this service will be reachable via my-service.default.svc.cluster.local:8080 (service to service communication inside your cluster) and any request reaching there is forwarded to a running pod on targetPort 8070.
 tagetPort is also by default the same value as port if not specified otherwise.
 
-
+### Ingress
+Ingress is a loadbalancing option which operates on L7 of OSI.
 
 ## Links
 - https://medium.com/@gajus/the-missing-ci-cd-kubernetes-component-helm-package-manager-1fe002aac680

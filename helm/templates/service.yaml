@@ -12,3 +12,20 @@ spec:
     targetPort: 8888
     name: http
     protocol: TCP
+
+---
+
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: k8s-helm-poc
+  annotations:
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /k8s-helm-poc-ingress
+        backend:
+          serviceName: k8s-helm-poc
+          servicePort: 8888
